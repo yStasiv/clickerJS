@@ -1,12 +1,136 @@
+
 body {
-  text-align: center;
   font-family: Arial, sans-serif;
-  background: #f2f2f2;
+  background: #f7f7f7;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
 }
 
-button {
-  margin: 10px;
-  padding: 10px 20px;
-  font-size: 18px;
+.main-grid {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  max-width: 900px;
+  margin: 32px auto 0 auto;
+}
+
+
+.left-panel {
+  width: 20vw;
+  min-width: 180px;
+  max-width: 300px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+.score-row {
+  width: 100%;
+  text-align: center;
+}
+#score {
+  font-size: 1.5em;
+  color: #333;
+  margin-bottom: 20px;
+  display: block;
+}
+
+#click-btn {
+  font-size: 1.5em;
+  padding: 15px 40px;
+  background: #4caf50;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
   cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+
+.right-panel {
+  width: 80vw;
+  max-width: 700px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+.tabs-row {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+#achievements-content {
+  text-align: center;
+}
+
+#achievements-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 auto;
+  max-width: 300px;
+}
+
+#achievements-list li {
+  background: #fff;
+  margin: 8px 0;
+  padding: 10px 18px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  font-size: 1em;
+}
+.tabs-row {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.tab-btn {
+  font-size: 1em;
+  padding: 8px 24px;
+  background: #e0e0e0;
+  color: #333;
+  border: none;
+  border-radius: 8px 8px 0 0;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  transition: background 0.2s;
+}
+.tab-btn.active {
+  background: #2196f3;
+  color: #fff;
+}
+
+.upgrades-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.upgrades-grid button {
+  font-size: 1em;
+  padding: 12px 18px;
+  background: #2196f3;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.reset-btn {
+  margin-top: 40px;
+  font-size: 1em;
+  padding: 10px 20px;
+  background: #f44336;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
 }

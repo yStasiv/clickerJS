@@ -6,11 +6,43 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>Мій клікер</h1>
-  <p>Очки: <span id="score">0</span></p>
-  <button id="click-btn">Клік!</button>
-  <button id="upgrade-btn">Апгрейд (10 очок)</button>
-
+  <h1 style="margin-left: 25px;">My first clicker on JS</h1>
+  <audio id="click-sound" src="sounds/click.mp3" preload="auto"></audio>
+  <audio id="no-money-sound" src="sounds/no_money.mp3" preload="auto"></audio>
+  <audio id="upgrade-sound" src="sounds/upgrade.mp3" preload="auto"></audio>
+  <!-- TODO: <audio id="boost-sound" src="sounds/boost.mp3" preload="auto"></audio>  need to add sound for boost --> 
+  <div class="main-grid">
+    <div class="left-panel">
+        <div class="score-row">
+            <p>Очки: <span id="score">0</span></p>
+        </div>
+      <button id="click-btn">Клік!</button>
+    </div>
+    <div class="right-panel">
+      <div class="tabs-row">
+        <button class="tab-btn active" id="city-tab">Місто</button>
+        <button class="tab-btn" id="achievements-tab">Нагороди</button>
+      </div>
+      <div id="city-content">
+        <div class="upgrades-grid">
+          <button id="upgrade-btn">Апгрейд (10 очок)</button>
+          <button id="upgrade2-btn">Супер апгрейд (50 очок)</button>
+          <button id="upgrade3-btn">Мега апгрейд (200 очок)</button>
+          <button id="test-boost-btn">+100k</button>
+        </div>
+        <button id="reset-btn" class="reset-btn">Скинути все</button>
+      </div>
+      <div id="achievements-content" style="display:none; width:100%;">
+        <h2>Досягнення</h2>
+        <ul id="achievements-list">
+          <li>Перший клік</li>
+          <li>10 очок</li>
+          <li>100 очок</li>
+          <li>Перший апгрейд</li>
+        </ul>
+      </div>
+    </div>
+  </div>
   <script src="script.js"></script>
 </body>
 </html>
