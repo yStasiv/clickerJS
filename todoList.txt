@@ -1,0 +1,2 @@
+Add option to restart game with some bonus
+Add more tabs with another ckicker games(-s)

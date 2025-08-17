@@ -1,7 +1,9 @@
-// Achievement bonus flags
+// Achievement bonus flags TODO: rename
 let achievement1BonusApplied = localStorage.getItem('achievement1BonusApplied') === 'true';
 let achievement2BonusApplied = localStorage.getItem('achievement2BonusApplied') === 'true';
 let achievement3BonusApplied = localStorage.getItem('achievement3BonusApplied') === 'true';
+let achievement4BonusApplied = localStorage.getItem('achievement4BonusApplied') === 'true';
+let achievement5BonusApplied = localStorage.getItem('achievement5BonusApplied') === 'true';
 // Звук кліку
 const clickSound = document.getElementById('click-sound');
 const noMoneySound = document.getElementById('no-money-sound');
@@ -35,6 +37,11 @@ let upgradeCount1 = Number(localStorage.getItem('upgradeCount1')) || 0;
 let upgradeCount2 = Number(localStorage.getItem('upgradeCount2')) || 0;
 let upgradeCount3 = Number(localStorage.getItem('upgradeCount3')) || 0;
 let upgradeCount4 = Number(localStorage.getItem('upgradeCount4')) || 0;
+let basePriceSize = 1.1; // Base price size for upgrades
+let lastMilestone = Number(localStorage.getItem('lastMilestone')) || 0;
+
+
+
 
 
 // Score
@@ -57,17 +64,17 @@ const preSecondCounter = document.getElementById("per-second-counter");
 const achievement1 = document.getElementById("first-1k-coins");
 const achievement2 = document.getElementById("100-clicks");
 const achievement3 = document.getElementById("each-ubgrade-bought");
-
-
+const achievement4 = document.getElementById("10-ubgrades-were-bought");
+const achievement5 = document.getElementById("all-to-max-level");
 
 
 
 function updateUI() {
   scoreEl.textContent = score;
-  upgradeBtn.textContent = `Basic \n Cost: ${10 * clickPower} coins\n Lvl: ${upgradeCount1}\n curent bonus: +${upgradeCount1*1}/click`;
-  upgrade2Btn.textContent = `Super \n Cost: ${50 * clickPower} coins\n Lvl: ${upgradeCount2}\n curent bonus: +${upgradeCount2*10}/click`;
-  upgrade3Btn.textContent = `Mega \n Cost: ${200 * clickPower} coins\n Lvl: ${upgradeCount3}\n curent bonus: +${upgradeCount3*20}/click`;
-  upgrade4Btn.textContent = `Auto \n Cost: ${1 * clickPower} coins\n Lvl: ${upgradeCount4}\n curent bonus: +${upgradeCount4*1}/second`;
+  upgradeBtn.textContent = `Basic \n Cost: ${parseInt(10 * Math.pow(basePriceSize, upgradeCount1))} coins\n Lvl: ${upgradeCount1}\n curent bonus: +${upgradeCount1*1}/click`;
+  upgrade2Btn.textContent = `Super \n Cost: ${parseInt(50 * Math.pow(basePriceSize, upgradeCount2))} coins\n Lvl: ${upgradeCount2}\n curent bonus: +${upgradeCount2*10}/click`;
+  upgrade3Btn.textContent = `Mega \n Cost: ${parseInt(200 * Math.pow(basePriceSize, upgradeCount3))} coins\n Lvl: ${upgradeCount3}\n curent bonus: +${upgradeCount3*20}/click`;
+  upgrade4Btn.textContent = `Auto \n Cost: ${parseInt(20 * Math.pow(basePriceSize, upgradeCount4))} coins\n Lvl: ${upgradeCount4}\n curent bonus: +${upgradeCount4*1}/second`;
   testBoostBtn.textContent = `+100k`;
 
   if (totalScoreCounter) totalScoreCounter.textContent = totalScore;
@@ -86,6 +93,12 @@ if (achievement2BonusApplied) {
 if (achievement3BonusApplied) {
   achievement3.textContent = "Each upgrade bought!";
 }
+if (achievement4BonusApplied) {
+  achievement4.textContent = "10 upgrades bought!";
+}
+if (achievement5BonusApplied) {
+  achievement5.textContent = "All upgrades were bought!";
+}
 updateUI();
 
 // autoClick each second
@@ -95,6 +108,7 @@ setInterval(() => {
     totalScore += autoClickPower;
     localStorage.setItem('score', score);
     localStorage.setItem('totalScore', totalScore);
+    checkDifficulty();
     updateUI();
   }
 }, 1000);
@@ -106,15 +120,19 @@ clickBtn.addEventListener("click", () => {
   localStorage.setItem('score', score);
   localStorage.setItem('totalScore', totalScore);
   localStorage.setItem('clickCounter', clickCount);
-  updateUI();
-  checkAchievements();
+  checkDifficulty();
+  checkAchievements();  // this also run updateUI()
   playSound(clickSound);
 });
 
 
 // upgrade buttons functionality
 upgradeBtn.addEventListener("click", () => {
-  const upgradeCost = 10 * clickPower;
+  const upgradeCost = parseInt(10 * Math.pow(basePriceSize, upgradeCount1));
+  if (upgradeCount1 >= 100 || upgradeCost > Number.MAX_SAFE_INTEGER) {
+    playSound(noMoneySound);
+    return;
+  }
   if (score >= upgradeCost) {
     score -= upgradeCost;
     clickPower++;
@@ -123,13 +141,18 @@ upgradeBtn.addEventListener("click", () => {
     localStorage.setItem('clickPower', clickPower);
     localStorage.setItem('upgradeCount1', upgradeCount1);
     playSound(upgradeSound);
-    updateUI();
+    checkDifficulty();
+    checkAchievements();  // this also run updateUI()
   } else {
     playSound(noMoneySound);
   }
 });
 upgrade2Btn.addEventListener("click", () => {
-  const upgradeCost = 50 * clickPower;
+  const upgradeCost = parseInt(50 * Math.pow(basePriceSize, upgradeCount2));
+  if (upgradeCount2 >= 100 || upgradeCost > Number.MAX_SAFE_INTEGER) {
+    playSound(noMoneySound);
+    return;
+  }
   if (score >= upgradeCost) {
     score -= upgradeCost;
     clickPower += 5;
@@ -138,14 +161,19 @@ upgrade2Btn.addEventListener("click", () => {
     localStorage.setItem('clickPower', clickPower);
     localStorage.setItem('upgradeCount2', upgradeCount2);
     playSound(upgradeSound);
-    updateUI();
+    checkDifficulty();
+    checkAchievements();  // this also run updateUI()
   } else {
     playSound(noMoneySound);
   }
 });
 
 upgrade3Btn.addEventListener("click", () => {
-  const upgradeCost = 200 * clickPower;
+  const upgradeCost = parseInt(200 * Math.pow(basePriceSize, upgradeCount3));
+  if (upgradeCount3 >= 100 || upgradeCost > Number.MAX_SAFE_INTEGER) {
+    playSound(noMoneySound);
+    return;
+  }
   if (score >= upgradeCost) {
     score -= upgradeCost;
     clickPower += 20;
@@ -154,14 +182,19 @@ upgrade3Btn.addEventListener("click", () => {
     localStorage.setItem('clickPower', clickPower);
     localStorage.setItem('upgradeCount3', upgradeCount3);
     playSound(upgradeSound);
-    updateUI();
+    checkDifficulty();
+    checkAchievements();  // this also run updateUI()
   } else {
     playSound(noMoneySound);
   }
 });
 
 upgrade4Btn.addEventListener("click", () => {
-  const upgradeCost = 1 * clickPower;
+  const upgradeCost = parseInt(20 * Math.pow(basePriceSize, upgradeCount4));
+  if (upgradeCount4 >= 100 || upgradeCost > Number.MAX_SAFE_INTEGER) {
+    playSound(noMoneySound);
+    return;
+  }
   if (score >= upgradeCost) {
     score -= upgradeCost;
     autoClickPower += 1;
@@ -170,6 +203,7 @@ upgrade4Btn.addEventListener("click", () => {
     localStorage.setItem('autoClickPower', autoClickPower);
     localStorage.setItem('upgradeCount4', upgradeCount4);
     playSound(upgradeSound);
+    checkDifficulty();
     updateUI();
   } else {
     playSound(noMoneySound);
@@ -180,7 +214,7 @@ testBoostBtn.addEventListener("click", () => {
   const upgradeCost = 0;
   if (score >= upgradeCost) {
     score -= upgradeCost;
-    score += 100000;
+    score += 10000000000;
     localStorage.setItem('score', score);
     localStorage.setItem('clickPower', clickPower);
     updateUI();
@@ -209,9 +243,13 @@ resetBtn.addEventListener("click", () => {
     achievement1BonusApplied = false;
     achievement2BonusApplied = false;
     achievement3BonusApplied = false;
+    achievement4BonusApplied = false;
+    achievement5BonusApplied = false;
     localStorage.setItem('achievement1BonusApplied', 'false');
     localStorage.setItem('achievement2BonusApplied', 'false');
     localStorage.setItem('achievement3BonusApplied', 'false');
+    localStorage.setItem('achievement4BonusApplied', 'false');
+    localStorage.setItem('achievement5BonusApplied', 'false');
     
     // Refresh current score
     score = 0;
@@ -220,6 +258,10 @@ resetBtn.addEventListener("click", () => {
     localStorage.setItem('score', score);
     localStorage.setItem('clickPower', clickPower);
     localStorage.setItem('autoClickPower', autoClickPower);
+    // Refresh price lvl
+    lastMilestone = 0;
+    localStorage.setItem('lastMilestone', '0');
+
 
     updateUI();
 });
@@ -259,7 +301,7 @@ function checkAchievements() {
     updateUI();
   }
   // Each upgrade bought
-  if ((upgradeCount1 > 0 || upgradeCount2 > 0 || upgradeCount3 > 0 || upgradeCount4 > 0)) {
+  if ((upgradeCount1 > 0 && upgradeCount2 > 0 && upgradeCount3 > 0 && upgradeCount4 > 0)) {
       if (!achievement3BonusApplied) {
         achievement3.textContent = "Each upgrade bought!";
         score += 1000;
@@ -268,8 +310,47 @@ function checkAchievements() {
         localStorage.setItem('score', score);
         localStorage.setItem('achievement3BonusApplied', 'true');
       }
+    updateUI();
+
     }
+  
+   // 10 upgrades bought
+   const totalUpgrades = upgradeCount1 + upgradeCount2 + upgradeCount3 + upgradeCount4;
+  if (totalUpgrades >= 10) {
+      if (!achievement4BonusApplied) {
+        achievement4.textContent = "10 upgrades were bought!";
+        autoClickPower += 5;
+        achievement4BonusApplied = true;
+        localStorage.setItem('autoClickPower', autoClickPower);
+        localStorage.setItem('achievement4BonusApplied', 'true');
+      }
+    updateUI();
+    }
+    // All upgrades bought
+  if (totalUpgrades >= 400) {
+      if (!achievement5BonusApplied) {
+        achievement3.textContent = "All upgrades bought!";
+        score = Number.MAX_SAFE_INTEGER;
+        totalScore = Number.MAX_SAFE_INTEGER;
+        achievement5BonusApplied = true;
+        localStorage.setItem('score', score);
+        localStorage.setItem('achievement5BonusApplied', 'true');
+      }
+    updateUI();
+    }
+    checkDifficulty();
     updateUI();
   }
-
 checkAchievements();
+
+
+function checkDifficulty() {
+  let milestone = Math.floor(totalScore / 100000);
+  if (milestone > lastMilestone) {
+    basePriceSize *= 1.01;
+    lastMilestone = milestone;
+    console.log("New difficulty level reached:", milestone);
+  }
+}
+
+
