@@ -211,14 +211,15 @@ upgrade4Btn.addEventListener("click", () => {
 });
 
 testBoostBtn.addEventListener("click", () => {
-  const upgradeCost = 0;
-  if (score >= upgradeCost) {
-    score -= upgradeCost;
-    score += 10000000000;
-    localStorage.setItem('score', score);
-    localStorage.setItem('clickPower', clickPower);
-    updateUI();
-  }
+    testBoostBtn.textContent = "This btn not for you=)";
+//   const upgradeCost = 0;
+//   if (score >= upgradeCost) {
+//     score -= upgradeCost;
+//     score += 10000000000;
+//     localStorage.setItem('score', score);
+//     localStorage.setItem('clickPower', clickPower);
+//     updateUI();
+//   }
 });
 resetBtn.addEventListener("click", () => {
     // TODO: Think if I need to refresh all counters
@@ -329,7 +330,7 @@ function checkAchievements() {
     // All upgrades bought
   if (totalUpgrades >= 400) {
       if (!achievement5BonusApplied) {
-        achievement3.textContent = "All upgrades bought!";
+        achievement5.textContent = "All upgrades bought!";
         score = Number.MAX_SAFE_INTEGER;
         totalScore = Number.MAX_SAFE_INTEGER;
         achievement5BonusApplied = true;
